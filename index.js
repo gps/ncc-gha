@@ -35,6 +35,8 @@ async function run() {
     
                 await exec.exec('git', ['push', url, 'HEAD']);
             });
+        } else {
+            console.log("Node.js module is up to date.");
         }
     } catch(error) {
         core.setFailed(error);
