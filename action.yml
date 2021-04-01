@@ -1,0 +1,15 @@
+name: 'ncc-gha'
+description:  '\"Builds\" a JS GitHub Action into a `dist/index.js` using @vercel/ncc'
+author: 'Gopal Sharma <gps@surya-soft.com>'
+inputs:
+  MAIN_FILE_PATH:
+    description: >
+      Path to main js file which will be used to generated `dist/index.js`.
+      Default value is `./index.js`.
+    required: false
+  TOKEN:
+    description: Auth token with delete permission.
+    required: true
+runs:
+  using: node12
+  main: 'dist/index.js'
