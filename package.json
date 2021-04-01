@@ -16,6 +16,7 @@
   "homepage": "https://github.com/gps/ncc-gha#readme",
   "dependencies": {
     "@actions/core": "^1.2.6",
-    "@actions/exec": "^1.0.4"
+    "@actions/exec": "^1.0.4",
+    "@vercel/ncc": "^0.27.0"
   }
 }

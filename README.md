@@ -9,7 +9,7 @@ The GitHub token used to authenticate with GitHub.
 
 **Required**
 
-### `MAIN_FILLE_PATH`
+### `MAIN_FILE_PATH`
 
 Path to main js file which will be used to generated `dist/index.js`. Default value is `./index.js`.
 

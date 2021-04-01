@@ -8,7 +8,7 @@ inputs:
       Default value is `./index.js`.
     required: false
   TOKEN:
-    description: Auth token with delete permission.
+    description: Github auth token.
     required: true
 runs:
   using: node12
