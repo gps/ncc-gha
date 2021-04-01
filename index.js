@@ -3,7 +3,7 @@ const core = require('@actions/core');
 const env = process.env;
 
 async function run() {
-    const token = core.getInput('tokTOKENen');
+    const token = core.getInput('TOKEN');
     var mainFilePath = core.getInput('MAIN_FILE_PATH')
 
     if (!mainFilePath) {
