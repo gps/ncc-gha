@@ -9,6 +9,7 @@ const exec = __nccwpck_require__(2049);
 const core = __nccwpck_require__(5127);
 const github = __nccwpck_require__(3134)
 const simpleGit = __nccwpck_require__(1740);
+const fs = __nccwpck_require__(5747);
 
 const env = process.env;
 
@@ -22,13 +23,19 @@ async function run() {
 
     try {
         const url = `${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}.git`.replace(/^https:\/\//, `https://x-access-token:${token}@`);
-        const branch = github.context.payload.pull_request.head.ref;
+        var branch;
+        if (github.context.eventName == 'pull_request') {
+            branch = github.context.payload.pull_request.head.ref;
+        } else {
+            branch = github.context.ref.replace("refs/heads/", "");
+        }
 
         const git = simpleGit();
         await git.addRemote('repo', url);
         await git.fetch('repo')
         await git.checkout(branch)
 
+        const distFolderAlreadyExists = fs.existsSync('./dist');
         await exec.exec('npm install');
         await exec.exec('npm i @vercel/ncc');
         await exec.exec('./node_modules/@vercel/ncc/dist/ncc/cli.js', ['build', mainFilePath, '--license', 'licenses.txt']);
@@ -39,7 +46,7 @@ async function run() {
             'git', ['diff', '--quiet'], {ignoreReturnCode: true}
         );
     
-        if (diff) {
+        if (diff || !distFolderAlreadyExists) {
             await core.group('push changes', async () => {
                 await git.addConfig('user.email', `${env.GITHUB_ACTOR}@users.noreply.github.com`)
                 await git.addConfig('user.name', env.GITHUB_ACTOR)
@@ -48,7 +55,7 @@ async function run() {
                 await git.push('repo', branch);
             });
         } else {
-            console.log("Node.js module is up to date.");
+            console.log("Node js module is up to date.");
         }
     } catch(error) {
         core.setFailed(error);

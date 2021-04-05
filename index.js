@@ -16,7 +16,12 @@ async function run() {
 
     try {
         const url = `${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}.git`.replace(/^https:\/\//, `https://x-access-token:${token}@`);
-        const branch = github.context.payload.pull_request.head.ref;
+        var branch;
+        if (github.context.eventName == 'pull_request') {
+            branch = github.context.payload.pull_request.head.ref;
+        } else {
+            branch = github.context.ref.replace("refs/heads/", "");
+        }
 
         const git = simpleGit();
         await git.addRemote('repo', url);
