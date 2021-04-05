@@ -1,4 +1,4 @@
-name: Buil Package to use ncc
+name: Build Package to use ncc
 on:
   push:
     branches:

@@ -7,7 +7,7 @@ module.exports =
 
 const exec = __nccwpck_require__(2049);
 const core = __nccwpck_require__(5127);
-const github = __nccwpck_require__(3134)
+const github = __nccwpck_require__(3134);
 const simpleGit = __nccwpck_require__(1740);
 const fs = __nccwpck_require__(5747);
 
@@ -15,10 +15,10 @@ const env = process.env;
 
 async function run() {
     const token = core.getInput('TOKEN');
-    var mainFilePath = core.getInput('MAIN_FILE_PATH')
+    var mainFilePath = core.getInput('MAIN_FILE_PATH');
 
     if (!mainFilePath) {
-        mainFilePath = './index.js'
+        mainFilePath = './index.js';
     }
 
     try {
@@ -32,8 +32,8 @@ async function run() {
 
         const git = simpleGit();
         await git.addRemote('repo', url);
-        await git.fetch('repo')
-        await git.checkout(branch)
+        await git.fetch('repo');
+        await git.checkout(branch);
 
         const distFolderAlreadyExists = fs.existsSync('./dist');
         await exec.exec('npm install');
@@ -48,10 +48,10 @@ async function run() {
     
         if (diff || !distFolderAlreadyExists) {
             await core.group('push changes', async () => {
-                await git.addConfig('user.email', `${env.GITHUB_ACTOR}@users.noreply.github.com`)
-                await git.addConfig('user.name', env.GITHUB_ACTOR)
-                await git.add('./dist')
-                await git.commit("Use  @vercel/ncc")
+                await git.addConfig('user.email', `${env.GITHUB_ACTOR}@users.noreply.github.com`);
+                await git.addConfig('user.name', env.GITHUB_ACTOR);
+                await git.add('./dist');
+                await git.commit("Generate distribution");
                 await git.push('repo', branch);
             });
         } else {
