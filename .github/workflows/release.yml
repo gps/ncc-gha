@@ -1,0 +1,14 @@
+name: Build Package to use ncc
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build node js module
+        uses: gps/ncc-gha@master
+        with:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}

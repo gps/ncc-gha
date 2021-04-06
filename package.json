@@ -1,0 +1,24 @@
+{
+  "name": "ncc-gha",
+  "version": "1.0.0",
+  "description": "\"Builds\" a JS GitHub Action into a `dist/index.js` using @vercel/ncc",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gps/ncc-gha.git"
+  },
+  "keywords": [],
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/gps/ncc-gha/issues"
+  },
+  "homepage": "https://github.com/gps/ncc-gha#readme",
+  "dependencies": {
+    "@actions/core": "^1.2.6",
+    "@actions/exec": "^1.0.4",
+    "@actions/github": "^4.0.0",
+    "@vercel/ncc": "^0.27.0",
+    "simple-git": "^2.37.0"
+  }
+}
