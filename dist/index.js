@@ -37,7 +37,7 @@ async function run() {
 
         const distFolderAlreadyExists = fs.existsSync('./dist');
         await exec.exec('npm install');
-        await exec.exec('npm i @vercel/ncc');
+        await exec.exec('npm i @vercel/ncc@0.27.0');
         await exec.exec('./node_modules/@vercel/ncc/dist/ncc/cli.js', ['build', mainFilePath, '--license', 'licenses.txt']);
         
 
