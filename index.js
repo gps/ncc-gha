@@ -50,6 +50,7 @@ async function run() {
         } else {
             console.log("Node js module is up to date.");
         }
+        await git.checkout(branch, ['-f']);
     } catch(error) {
         core.setFailed(error);
     }
