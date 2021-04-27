@@ -50,8 +50,8 @@ async function run() {
         } else {
             console.log("Node js module is up to date.");
         }
-        await git.pull(branch, ['-f']);
-        console.log("Git pull successfull");
+        await git.reset('hard');
+        console.log('Reset local changes');
     } catch(error) {
         core.setFailed(error);
     }
