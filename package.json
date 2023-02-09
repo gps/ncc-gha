@@ -15,10 +15,10 @@
   },
   "homepage": "https://github.com/gps/ncc-gha#readme",
   "dependencies": {
-    "@actions/core": "^1.2.6",
-    "@actions/exec": "^1.0.4",
-    "@actions/github": "^4.0.0",
-    "@vercel/ncc": "^0.27.0",
-    "simple-git": "^2.37.0"
+    "@actions/core": "^1.10.0",
+    "@actions/exec": "^1.1.1",
+    "@actions/github": "^5.1.1",
+    "@vercel/ncc": "^0.36.1",
+    "simple-git": "^3.16.0"
   }
 }

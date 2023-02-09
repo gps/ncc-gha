@@ -1,4 +1,5 @@
 # ncc-gha
+
 "Builds" a JS GitHub Action into a `dist/index.js` using @vercel/ncc
 
 ## Inputs
@@ -12,7 +13,6 @@ The GitHub token used to authenticate with GitHub.
 ### `MAIN_FILE_PATH`
 
 Path to main js file which will be used to generated `dist/index.js`. Default value is `./index.js`.
-
 
 ## Example Usage
 
