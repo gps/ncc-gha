@@ -9,6 +9,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Build node js module
-        uses: gps/ncc-gha@master
+        uses: kunalgupta022/ncc-gha@kunal/bump-node-version
         with:
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
