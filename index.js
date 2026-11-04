@@ -1,13 +1,15 @@
-const exec = require('@actions/exec');
-const core = require('@actions/core');
-const github = require('@actions/github');
-const simpleGit = require('simple-git');
-const fs = require('fs');
+import * as exec from '@actions/exec';
+import * as core from '@actions/core';
+import * as github from '@actions/github';
+import { simpleGit } from 'simple-git';
+import fs from 'node:fs';
+import nccPackage from '@vercel/ncc/package.json' with { type: 'json' };
 
 const env = process.env;
 
 async function run() {
     const token = core.getInput('TOKEN');
+    core.setSecret(token);
     var mainFilePath = core.getInput('MAIN_FILE_PATH');
 
     if (!mainFilePath) {
@@ -30,8 +32,10 @@ async function run() {
 
         const distFolderAlreadyExists = fs.existsSync('./dist');
         await exec.exec('npm install');
-        await exec.exec('npm i @vercel/ncc@0.27.0');
-        await exec.exec('./node_modules/@vercel/ncc/dist/ncc/cli.js', ['build', mainFilePath, '--license', 'licenses.txt']);
+        await exec.exec('npm', [
+            'exec', '--yes', `--package=@vercel/ncc@${nccPackage.version}`, '--',
+            'ncc', 'build', mainFilePath, '--license', 'licenses.txt'
+        ]);
         
 
         // check for git diff
