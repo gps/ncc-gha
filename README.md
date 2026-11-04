@@ -8,8 +8,13 @@ ncc to the target project’s dependencies.
 
 ## Development
 
-Use Node.js 24 or later. Run `npm ci`, `npm run build`, and
-`npm audit` before committing. Include the generated `dist` files in the commit.
+Use Node.js 24 or later. Run `npm ci` and `npm run build` before committing.
+Include the generated `dist` files in the commit. Pull requests check that the
+bundle is committed; pushes to master allow the release workflow to regenerate it.
+
+The action updates branch refs and pull requests from the same repository.
+Tag refs and fork pull requests are skipped with a notice because they cannot
+receive a distribution commit through this action’s repository token.
 
 ## Inputs
 

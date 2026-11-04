@@ -33493,7 +33493,7 @@ function warning(message, properties = {}) {
  * @param properties optional properties to add to the annotation.
  */
 function notice(message, properties = {}) {
-    issueCommand('notice', toCommandProperties(properties), message instanceof Error ? message.toString() : message);
+    command_issueCommand('notice', utils_toCommandProperties(properties), message instanceof Error ? message.toString() : message);
 }
 /**
  * Writes info to log with console.log.
@@ -42001,12 +42001,9 @@ const wo = (t, e) => {
 
 //# sourceMappingURL=index.mjs.map
 
-;// CONCATENATED MODULE: external "node:fs"
-const external_node_fs_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:fs");
 ;// CONCATENATED MODULE: ./node_modules/@vercel/ncc/package.json
 const package_namespaceObject = {"rE":"0.45.0"};
 ;// CONCATENATED MODULE: ./index.js
-
 
 
 
@@ -42025,39 +42022,42 @@ async function run() {
     }
 
     try {
-        const url = `${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}.git`.replace(/^https:\/\//, `https://x-access-token:${token}@`);
-        var branch;
+        let branch;
         if (github_context.eventName == 'pull_request') {
-            branch = github_context.payload.pull_request.head.ref;
+            const head = github_context.payload.pull_request.head;
+            if (head.repo?.full_name !== env.GITHUB_REPOSITORY) {
+                notice('Skipping fork pull request: the repository token cannot push to the fork.');
+                return;
+            }
+            branch = head.ref;
         } else {
-            branch = github_context.ref.replace("refs/heads/", "");
+            if (!github_context.ref.startsWith('refs/heads/')) {
+                notice('Skipping non-branch ref: distribution updates require a branch.');
+                return;
+            }
+            branch = github_context.ref.slice('refs/heads/'.length);
         }
 
+        const url = `${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}.git`.replace(/^https:\/\//, `https://x-access-token:${token}@`);
         const git = wo();
         await git.addRemote('repo', url);
-        await git.fetch('repo');
-        await git.checkout(branch);
+        await git.fetch('repo', `refs/heads/${branch}`);
+        await git.checkout(['-B', branch, 'FETCH_HEAD']);
 
-        const distFolderAlreadyExists = external_node_fs_namespaceObject.existsSync('./dist');
         await exec_exec('npm install');
         await exec_exec('npm', [
             'exec', '--yes', `--package=@vercel/ncc@${package_namespaceObject.rE}`, '--',
             'ncc', 'build', mainFilePath, '--license', 'licenses.txt'
         ]);
-        
 
-        // check for git diff
-        const diff = await exec_exec(
-            'git', ['diff', '--quiet'], {ignoreReturnCode: true}
-        );
-    
-        if (diff || !distFolderAlreadyExists) {
+        const distChanges = await git.raw(['status', '--porcelain', '--untracked-files=all', '--', 'dist']);
+        if (distChanges.trim()) {
             await group('push changes', async () => {
                 await git.addConfig('user.email', `${env.GITHUB_ACTOR}@users.noreply.github.com`);
                 await git.addConfig('user.name', env.GITHUB_ACTOR);
                 await git.add('./dist');
                 await git.commit("Generate distribution");
-                await git.push('repo', branch);
+                await git.push('repo', `HEAD:refs/heads/${branch}`);
             });
         } else {
             console.log("Node js module is up to date.");

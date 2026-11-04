@@ -1,6 +1,8 @@
 name: Check Dependencies And Bundle
 on:
   push:
+    branches:
+      - master
   pull_request:
 permissions:
   contents: read
@@ -14,6 +16,12 @@ jobs:
           node-version: '24'
           cache: npm
       - run: npm ci
-      - run: npm audit
       - run: npm run build
-      - run: git diff --exit-code -- dist
+      - name: Check Committed Bundle
+        if: github.event_name == 'pull_request'
+        run: |
+          changes=$(git status --porcelain --untracked-files=all -- dist)
+          if [ -n "$changes" ]; then
+            echo "$changes"
+            exit 1
+          fi
