@@ -8,7 +8,7 @@ ncc to the target project’s dependencies.
 
 ## Development
 
-Use Node.js 24 or later. Run `npm ci`, `npm run build`, `npm test`, and
+Use Node.js 24 or later. Run `npm ci`, `npm run build`, and
 `npm audit` before committing. Include the generated `dist` files in the commit.
 
 ## Inputs

@@ -8,8 +8,7 @@
     "node": ">=24"
   },
   "scripts": {
-    "build": "ncc build index.js --license licenses.txt",
-    "test": "node --test"
+    "build": "ncc build index.js --license licenses.txt"
   },
   "repository": {
     "type": "git",
